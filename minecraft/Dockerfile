@@ -19,5 +19,6 @@ USER minecraft
 WORKDIR /var/minecraft/server
 EXPOSE 25565
 EXPOSE 25575
+EXPOSE 19132
 EXPOSE 8123
 CMD [ "/var/graalvm/graalvm-ce-java17-22.1.0/bin/java", "-Xms8G", "-Xmx8G", "-jar", "spigot.jar", "--nogui" ]

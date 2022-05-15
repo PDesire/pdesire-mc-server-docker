@@ -6,6 +6,7 @@ services:
     ports:
       - "25565:25565"
       - "25575:25575"
+      - "19132:19132"
       - "8123:8123"
     volumes:
       - ./minecraft/server:/var/minecraft/server  
