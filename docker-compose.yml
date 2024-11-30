@@ -9,7 +9,7 @@ services:
       - "19132:19132"
       - "8123:8123"
     volumes:
-      - ./minecraft/server:/var/minecraft  
+      - ./minecraft/server:/var/minecraft/server
   nginx-proxy:
     depends_on:
       - minecraft
