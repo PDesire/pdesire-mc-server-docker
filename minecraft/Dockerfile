@@ -1,7 +1,8 @@
 FROM ghcr.io/graalvm/jdk-community:21
 
 # Setup Minecraft User
-RUN adduser --badname minecraft
+RUN groupadd -g 6969 minecraft
+RUN adduser --badname minecraft --uid 6969 --gid 6969
 
 # Setup Minecraft server enviroment
 WORKDIR /var/minecraft
