@@ -1,24 +1,31 @@
-FROM fedora:latest
+FROM ghcr.io/graalvm/jdk-community:21
 
-# Setup container
-RUN dnf update -y
-RUN dnf install wget -y 
+ENV PAPER_MC_VERSION="1.21.1"
+ENV PAPER_BUILD_VERSION=131
 
 # Setup Minecraft User
-RUN useradd -m -d /var/minecraft minecraft
+RUN adduser --badname minecraft
 
-# Setup GraalVM
-RUN mkdir /var/graalvm
-WORKDIR /var/graalvm
-RUN wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.1.0/graalvm-ce-java17-linux-amd64-22.1.0.tar.gz
-RUN tar -xvzf graalvm-ce-java17-linux-amd64-22.1.0.tar.gz
-RUN chown -R minecraft:minecraft graalvm-ce-java17-22.1.0/ 
+# Setup latest Paper
+WORKDIR /var/minecraft
+RUN mkdir -p /var/minecraft
+
+# Download binaries
+RUN curl -o spigot.jar https://api.papermc.io/v2/projects/paper/versions/${PAPER_MC_VERSION}/builds/${PAPER_BUILD_VERSION}/downloads/paper-${PAPER_MC_VERSION}-${PAPER_BUILD_VERSION}.jar
+
+# Copy plugins 
+COPY plugins /var/minecraft/plugins
+
+# Set permissions
+RUN chown -R minecraft:minecraft /var/minecraft
+
+# Accept EULA
+RUN echo "eula=true" >> eula.txt
 
 # Run Minecraft server
 USER minecraft
-WORKDIR /var/minecraft/server
 EXPOSE 25565
 EXPOSE 25575
 EXPOSE 19132
 EXPOSE 8123
-CMD [ "/var/graalvm/graalvm-ce-java17-22.1.0/bin/java", "-Xms8G", "-Xmx8G", "-jar", "spigot.jar", "--nogui" ]
+CMD [ "/bin/bash", "-c", "java -Xms8G -Xmx8G -jar spigot.jar --nogui" ]
